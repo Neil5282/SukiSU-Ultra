@@ -1,0 +1,27 @@
+name: Build SukiSU Ultra v4.2.0 Windows ksud
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-lkm:
+    uses: ./.github/workflows/build-lkm.yml
+
+  build-ksuinit:
+    uses: ./.github/workflows/ksuinit.yml
+    with:
+      os: ubuntu-latest
+
+  build-ksud-windows:
+    needs:
+      - build-lkm
+      - build-ksuinit
+    uses: ./.github/workflows/ksud-extra.yml
+    with:
+      target: x86_64-pc-windows-gnu
+      os: ubuntu-latest
+      pack_lkm: true
+      pack_ksuinit: true
